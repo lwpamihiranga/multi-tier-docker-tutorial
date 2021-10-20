@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  backend-api:
+    image: multi-tier-docker-api
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./api:/app
+    networks:
+      - multi-tier-docker
+    depends_on:
+      - mongo
+  frontend-client:
+    image: 'multi-tier-docker-client'
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - multi-tier-docker
+    volumes:
+      - ./client:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend-api
+  mongo:
+    image: mongo
+    networks:
+      - multi-tier-docker
+    ports:
+      - 27017:27017
+    restart: always
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+
+networks:
+  multi-tier-docker:
+    driver: bridge
+
+volumes:
+  mongodb:
+  mongodb_config:
