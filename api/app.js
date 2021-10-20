@@ -1,8 +1,12 @@
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
 
 const PORT = 5000;
+
+// setup middlewares
+app.use(morgan('dev'));
 
 app.get('/', (req, res) => {
   res.json('api is working!');
