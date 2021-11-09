@@ -8,6 +8,8 @@ const app = express();
 
 const PORT = 5000;
 
+const todo = require('./routes/todo');
+
 // connect to mongo db container
 db();
 
@@ -17,9 +19,12 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.json('api is working!');
 });
+
+// register todo route
+app.use('/api/todo', todo);
 
 // start server
 app.listen(PORT, () => {
